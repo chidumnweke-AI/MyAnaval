@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root {
+  --bg: #050505;
+  --card-bg: #111111;
+  --text: #e8e8e8;
+  --gold: #c9a961;
+  --gray: #888888;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; }
+.container { max-width: 1100px; margin: auto; padding: 100px 20px; }
+.section-label { color: var(--gold); letter-spacing: 3px; font-size: 11px; margin-bottom: 15px; text-transform: uppercase; }
+
+/* NAVBAR */
+.navbar { position: fixed; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 25px 60px; z-index: 1000; background: rgba(5,5,5,0.7); backdrop-filter: blur(10px); transition: 0.3s; }
+.logo { font-family: 'Playfair Display'; font-size: 24px; color: var(--text); }
+.logo span { color: var(--gold); }
+.nav-links a { color: var(--text); text-decoration: none; margin-left: 35px; font-size: 12px; letter-spacing: 1.5px; font-weight: 500; }
+.nav-links.open-today { color: var(--gold); }
+.menu-btn { display: none; font-size: 26px; cursor: pointer; color: var(--text); }
+.mobile-menu { display: none; }
+
+/* HERO */
+.hero { height: 100vh; position: relative; }
+.slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease; }
+.slide.active { opacity: 1; }
+.slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)); }
+.slide-content { position: relative; z-index: 2; text-align: center; top: 50%; transform: translateY(-50%); padding: 0 20px; }
+.location { letter-spacing: 4px; font-size: 11px; color: var(--gold); }
+.slide-content h1 { font-size: 70px; margin: 15px 0; color: #fff; }
+.tagline { font-size: 16px; margin-bottom: 35px; color: var(--gray); }
+.btn { padding: 15px 32px; text-decoration: none; margin: 0 8px; font-size: 12px; letter-spacing: 1.5px; font-weight: 600; transition: 0.3s; display: inline-block; }
+.btn-gold { background: var(--gold); color: #000; }
+.btn-gold:hover { background: #d8b86e; }
+.btn-outline { border: 1px solid var(--gold); color: var(--gold); }
+.btn-outline:hover { background: var(--gold); color: #000; }
+.dots { position: absolute; bottom: 100px; width: 100%; text-align: center; z-index: 3; }
+.dot { height: 8px; width: 8px; margin: 0 6px; background: #444; border-radius: 50%; display: inline-block; cursor: pointer; transition: 0.3s; }
+.dot.active { background: var(--gold); width: 20px; border-radius: 10px; }
+
+/* STATS BAR */
+.stats-bar { display: flex; justify-content: space-around; background: var(--card-bg); padding: 20px; font-size: 11px; letter-spacing: 1px; border-top: 1px solid #222; border-bottom: 1px solid #222; }
+
+/* SECTIONS */
+.about,.services,.reviews,.contact { border-top: 1px solid #1a1a1a; }
+.about h2,.services h2,.reviews h2,.contact h2 { font-size: 40px; margin-bottom: 20px; color: #fff; }
+
+/* SERVICES GRID */
+.service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 50px; }
+.service-card { background: var(--card-bg); padding: 35px; border: 1px solid #1a1a1a; transition: 0.3s; }
+.service-card:hover { border-color: var(--gold); }
+.service-card h3 { font-size: 20px; margin-bottom: 10px; }
+.service-card p { color: var(--gray); font-size: 14px; line-height: 1.7; }
+
+/* REVIEWS */
+.review-card { background: var(--card-bg); padding: 30px; margin-top: 20px; border-left: 3px solid var(--gold); }
+.stars { color: var(--gold); margin-bottom: 10px; }
+
+/* CONTACT */
+.contact-info { margin: 20px 0 40px; color: var(--gray); }
+.contact form { display: flex; flex-direction: column; gap: 18px; max-width: 650px; margin-top: 20px; }
+.contact input,.contact textarea { background: var(--card-bg); border: 1px solid #222; padding: 16px; color: var(--text); font-family: 'Inter'; }
+
+.footer { text-align: center; padding: 40px 20px; background: #000; font-size: 12px; color: var(--gray); border-top: 1px solid #1a1a1a; }
+
+/* RESPONSIVE */
+@media(max-width: 900px){
+.navbar { padding: 20px; }
+.nav-links { display: none; }
+.menu-btn { display: block; }
+.slide-content h1 { font-size: 40px; }
+.service-grid { grid-template-columns: 1fr; }
+.stats-bar { flex-direction: column; gap: 10px; text-align: center; }
+.mobile-menu { display: flex; flex-direction: column; position: fixed; top: 0; right: -100%; width: 75%; height: 100%; background: #0a0a0a; padding: 80px 30px; transition: 0.4s; z-index: 2000; }
+.mobile-menu.active { right: 0; }
+.mobile-menu a { color: var(--text); text-decoration: none; padding: 15px 0; border-bottom: 1px solid #1a1a1a; }
+.close-btn { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; }
+}
+/* VISIT SECTION */
+.visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin: 40px 0 60px; }
+.visit-info p { margin-bottom: 10px; color: var(--gray); }
+.visit-info .phone { color: var(--gold); font-size: 18px; margin: 15px 0; }
+.opening-hours h3 { color: var(--gold); margin-bottom: 20px; letter-spacing: 2px; }
+.hours-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a1a1a; color: var(--gray); }
+.contact-sub { color: var(--gray); margin-bottom: 20px; }
+
+@media(max-width: 900px){
+  .visit-grid { grid-template-columns: 1fr; }
+}
+/* ANIMATION FOR SCROLL */
+.hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* SMOOTH TEXT ANIMATION ON SLIDER */
+.slide-content {
+  transition: all 0.8s ease;
+}
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="logo">Anaval <span>Autoserve</span></div>
+    <nav class="nav-links">
+      <a href="#home">HOME</a>
+      <a href="#about">ABOUT</a>
+      <a href="#services">SERVICES</a>
+      <a href="#reviews">REVIEWS</a>
+      <a href="#contact">CONTACT US</a>
+      <a href="#contact" class="open-today">OPEN TODAY</a>
+    </nav>
+    <div class="menu-btn" id="menu-btn">☰</div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <span class="close-btn" id="close-btn">×</span>
+    <a href="#home">HOME</a>
+    <a href="#about">ABOUT</a>
+    <a href="#services">SERVICES</a>
+    <a href="#reviews">REVIEWS</a>
+    <a href="#contact">CONTACT US</a>
+    <a href="#contact">OPEN TODAY</a>
+  </div>
+
+  <!-- HERO SLIDER -->
+  <section class="hero" id="home">
+    <div class="slides">
+      <!-- Slide 1 -->
+      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070')">
+        <div class="slide-content">
+          <p class="location">AWKA, ANAMBRA</p>
+          <h1>Anaval Autoserve</h1>
+          <p class="tagline">Where precision meets prestige in automobile care.</p>
+          <div class="btn-group">
+            <a href="#contact" class="btn btn-gold">BOOK A SERVICE</a>
+            <a href="#services" class="btn btn-outline">OUR WORK</a>
+          </div>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1486262715619-67b85e0ce827?q=80&w=2070')">
+        <div class="slide-content">
+          <p class="location">COMPUTER DIAGNOSTICS</p>
+          <h1>Read Before We Repair</h1>
+          <p class="tagline">Modern scan tools that find the fault the first time.</p>
+          <div class="btn-group">
+            <a href="#contact" class="btn btn-gold">BOOK A SERVICE</a>
+            <a href="#services" class="btn btn-outline">OUR WORK</a>
+          </div>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1542362567-b07e4312efa3?q=80&w=2070')">
+        <div class="slide-content">
+          <p class="location">DETAILING & FINISH</p>
+          <h1>Delivered Showroom Ready</h1>
+          <p class="tagline">Every vehicle leaves cleaner than it arrived.</p>
+          <div class="btn-group">
+            <a href="#contact" class="btn btn-gold">BOOK A SERVICE</a>
+            <a href="#services" class="btn btn-outline">OUR WORK</a>
+          </div>
+        </div>
+      </div>
+      <!-- Slide 4 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2070')">
+        <div class="slide-content">
+          <p class="location">PRECISION WORKSHOP</p>
+          <h1>Torque-Spec Discipline</h1>
+          <p class="tagline">Calibrated tools, documented work, no guesswork.</p>
+          <div class="btn-group">
+            <a href="#contact" class="btn btn-gold">BOOK A SERVICE</a>
+            <a href="#services" class="btn btn-outline">OUR WORK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div>RATED 5.0 ★ 5 REVIEWS</div>
+    <div>SEEMAN AVENUE, AWKA</div>
+    <div>ALL MAKES & MODELS</div>
+    <div>OPEN TODAY</div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <p class="section-label">THE WORKSHOP</p>
+      <h2>An auto repair shop built to a higher standard</h2>
+      <p>Anaval Autoserve serves Awka and greater Anambra with disciplined, diagnostic-led automobile care. From daily saloons to executive SUVs, every vehicle is treated as if it were our own - inspected thoroughly, repaired properly and returned promptly.</p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="container">
+      <p class="section-label">WHAT WE DO</p>
+      <h2>Full-service care, finished to the last detail</h2>
+      <div class="service-grid">
+        <div class="service-card"><h3>Computer Diagnostics</h3><p>Accurate fault-finding and module coding with dealer-level tools.</p></div>
+        <div class="service-card"><h3>Engine & Transmission</h3><p>From oil changes to rebuilds - precision work, OEM parts.</p></div>
+        <div class="service-card"><h3>Brakes & Suspension</h3><p>Pad, rotor, shock, bushing and alignment work for safety and comfort.</p></div>
+        <div class="service-card"><h3>Electrical & AC</h3><p>Wiring, health, alternators, starters, AC service restored to suit performance.</p></div>
+        <div class="service-card"><h3>Servicing & Fluids</h3><p>Scheduled maintenance with genuine filters and premium lubricants.</p></div>
+        <div class="service-card"><h3>Detailing & Finish</h3><p>Interior refresh, paint correction, ceramic and glass restoration.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews" id="reviews">
+    <div class="container">
+      <p class="section-label">REVIEWS</p>
+      <h2>5.0 from our customers</h2>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"They are the best Automobile repair now in Anambra, Awka South."</p>
+        <span>- Nnamdi Obi, 2 months ago</span>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"They are the best in Awka, very fast working system."</p>
+        <span>- Ahmed Musa, 1 month ago</span>
+      </div>
+    </div>
+  </section>
+  <!-- VISIT US + OPENING HOURS -->
+<section class="visit" id="contact">
+  <div class="container">
+    <p class="section-label">VISIT US</p>
+    <h2>Bring it in, we'll take it from here</h2>
+    
+    <div class="visit-grid">
+      <div class="visit-info">
+        <p><b>Seeman Avenue, 15 off Secretariat Rd</b></p>
+        <p>Awka 420110, Anambra</p>
+        <p>Plus code: 63MH+H7 Awka</p>
+        <p class="phone">0802 483 1939</p>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-gold">GET DIRECTIONS</a>
+      </div>
+
+      <div class="opening-hours">
+        <h3>OPENING HOURS</h3>
+        <div class="hours-row"><span>Monday</span> <span>7:45 am - 12 am</span></div>
+        <div class="hours-row"><span>Tuesday</span> <span>12 am - 6:45 pm</span></div>
+        <div class="hours-row"><span>Wednesday</span> <span>7:45 am - 6:45 pm</span></div>
+        <div class="hours-row"><span>Thursday</span> <span>7:45 am - 6:45 pm</span></div>
+        <div class="hours-row"><span>Friday</span> <span>7:45 am - 6:45 pm</span></div>
+        <div class="hours-row"><span>Saturday</span> <span>7:45 am - 6:45 pm</span></div>
+        <div class="hours-row"><span>Sunday</span> <span>Closed</span></div>
+      </div>
+    </div>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <h2>Bring it in, we'll take it from here</h2>
+      <div class="contact-info">
+        <p><b>Phone:</b> 0902 463 1039</p>
+        <p><b>Address:</b> Seeman Avenue, 15 off Secretariat Rd, Awka 420110, Anambra</p>
+      </div>
+      <h3>Tell us what your car needs</h3>
+      <form id="contact-form">
+        <input type="text" placeholder="Your name" required>
+        <input type="tel" placeholder="Phone number" required>
+        <input type="text" placeholder="Vehicle e.g. Toyota Camry 2010">
+        <textarea placeholder="What is the issue?" rows="4" required></textarea>
+        <button type="submit" class="btn btn-gold">REQUEST A CALLBACK</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Anaval Autoserve - AUTO REPAIR AND MAINTENANCE</p>
+    <p>© 2025 Anaval Autoserve. All rights reserved.</p>
+  </footer>
+  <script>
+    // 1. HERO SLIDER - SMOOTH FADE + AUTO SLIDE
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.remove('active');
+    // Add zoom effect to text
+    const content = slide.querySelector('.slide-content');
+    if(content) content.style.transform = 'translateY(-50%) scale(0.95)';
+    content.style.opacity = '0';
+  });
+  dots.forEach(dot => dot.classList.remove('active'));
+  
+  slides[index].classList.add('active');
+  dots[index].classList.add('active');
+
+  // Animate text in after 0.3s
+  setTimeout(() => {
+    const activeContent = slides[index].querySelector('.slide-content');
+    if(activeContent){
+      activeContent.style.transform = 'translateY(-50%) scale(1)';
+      activeContent.style.opacity = '1';
+    }
+  }, 300);
+}
+
+// Auto slide every 5 seconds
+setInterval(() => {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}, 5000);
+
+// Click dots
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    currentSlide = i;
+    showSlide(currentSlide);
+  });
+});
+
+
+// 2. SCROLL ANIMATIONS - FADE IN WHEN YOU SCROLL DOWN
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
+  });
+}, { threshold: 0.1 });
+
+// Add 'hidden' class to anything you want to animate
+document.querySelectorAll('.service-card,.about h2,.about p,.reviews h2,.visit-grid').forEach(el => {
+  el.classList.add('hidden');
+  observer.observe(el);
+});
+
+
+// 3. PARALLAX EFFECT ON HERO SLIDER
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const hero = document.querySelector('.hero');
+  if(hero && scrollY < window.innerHeight){
+    hero.style.backgroundPositionY = scrollY * 0.5 + 'px'; // makes it move slower
+  }
+});
+
+
+// 4. SMOOTH SCROLL FOR NAVBAR
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  });
+});
+
+
+// 5. NAVBAR SHRINK + CHANGE COLOR ON SCROLL
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 80){
+    navbar.style.background = '#050505';
+    navbar.style.padding = '15px 60px'; // shrinks
+  } else {
+    navbar.style.background = 'rgba(5,5,5,0.7)';
+    navbar.style.padding = '25px 60px';
+  }
+});
+
+
+// 6. MOBILE MENU
+const menuBtn = document.getElementById('menu-btn');
+const closeBtn = document.getElementById('close-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if(menuBtn){ menuBtn.onclick = () => mobileMenu.classList.add('active'); }
+if(closeBtn){ closeBtn.onclick = () => mobileMenu.classList.remove('active'); }
+
+
+// 7. CONTACT FORM
+document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert('Thank you! We will call you back shortly.');
+  e.target.reset();
+});
+  </script>
+</body>
+</html>
